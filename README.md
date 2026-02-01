@@ -421,10 +421,6 @@ in the Software without restriction...
 
 ---
 
-<div align="center">
 
-**⭐ Star этот репозиторий, если проект был полезен!**
-
-Made with ❤️ in Uzbekistan
 
 </div>
