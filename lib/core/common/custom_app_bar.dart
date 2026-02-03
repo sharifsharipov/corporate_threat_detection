@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:corporate_threat_detection/core/extension/extension.dart';
 import 'package:corporate_threat_detection/core/utils/utils.dart';
 
-
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({
     super.key,
@@ -11,14 +10,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.centerTitle = true,
     this.actions,
     this.leadingVisible = true,
+    this.customLeading = true,
     this.bottom,
-    this.onTap
+    this.onTap,
   });
 
   final String title;
   final bool centerTitle;
   final Widget? actions;
   final bool leadingVisible;
+  final bool customLeading;
   final PreferredSizeWidget? bottom;
   final VoidCallback? onTap;
 
@@ -26,16 +27,30 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       leading: leadingVisible
-          ? IconButton(
-              onPressed: (){
-                onTap?.call();
-                context.pop();
-              },
-              icon:Icon(Icons.arrow_back,color: context.isDarkMode?Colors.white:Colors.black,) ,
-            )
+          ? (customLeading
+                ? IconButton(
+                    onPressed: () {
+                      onTap?.call();
+                      if (context.canPop()) {
+                        context.pop();
+                      }
+                    },
+                    icon: Icon(
+                      Icons.arrow_back,
+                      color: context.isDarkMode ? Colors.white : Colors.black,
+                    ),
+                  )
+                : null)
           : const SizedBox.shrink(),
+      automaticallyImplyLeading: !customLeading && leadingVisible,
       centerTitle: centerTitle,
-      title: Text(title, style: context.textStyle.appBarTitle,maxLines: 10,overflow: TextOverflow.ellipsis,textAlign: TextAlign.center,),
+      title: Text(
+        title,
+        style: context.textStyle.appBarTitle,
+        maxLines: 10,
+        overflow: TextOverflow.ellipsis,
+        textAlign: TextAlign.center,
+      ),
       actions: actions != null ? [actions!.paddingOnly(right: wi(20))] : [],
       bottom: bottom,
     );

@@ -18,12 +18,7 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: Routes.initial,
       name: Routes.initial,
-      redirect: (context, state) {
-        if (localSource.accessToken.isNotEmpty) {
-          return Routes.dashboardOverview;
-        }
-        return Routes.login;
-      },
+      builder: (context, state) => const DashboardOverviewPage(),
     ),
     GoRoute(
       path: Routes.login,

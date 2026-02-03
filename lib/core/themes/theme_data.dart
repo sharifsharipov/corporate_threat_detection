@@ -23,7 +23,7 @@ const SystemUiOverlayStyle systemUiOverlayStyleLight = SystemUiOverlayStyle(
 
 final ThemeData lightTheme = ThemeData(
   useMaterial3: true,
-  
+
   applyElevationOverlayColor: true,
   extensions: const <ThemeExtension<dynamic>>[
     ThemeColors.light,
@@ -31,8 +31,9 @@ final ThemeData lightTheme = ThemeData(
     ThemeTextStyles.light,
     ThemeCustomShapes.light,
   ],
-  splashFactory:
-      Platform.isAndroid ? InkRipple.splashFactory : NoSplash.splashFactory,
+  splashFactory: kIsWeb
+      ? NoSplash.splashFactory
+      : (Platform.isAndroid ? InkRipple.splashFactory : NoSplash.splashFactory),
   visualDensity: VisualDensity.standard,
   materialTapTargetSize: MaterialTapTargetSize.padded,
   textButtonTheme: const TextButtonThemeData(
@@ -44,7 +45,7 @@ final ThemeData lightTheme = ThemeData(
   colorScheme: colorLightScheme,
   cardColor: colorLightScheme.surface,
   canvasColor: colorLightScheme.surface,
-  scaffoldBackgroundColor:Colors.white,
+  scaffoldBackgroundColor: Colors.white,
   shadowColor: const Color(0xFF343434),
   progressIndicatorTheme: ProgressIndicatorThemeData(
     color: colorLightScheme.primary,
@@ -52,10 +53,7 @@ final ThemeData lightTheme = ThemeData(
     linearTrackColor: const Color(0xFF343434),
     circularTrackColor: Colors.white,
   ),
-  dividerTheme:  DividerThemeData(
-    thickness: 1,
-    color: AppColors.textColor,
-  ),
+  dividerTheme: DividerThemeData(thickness: 1, color: AppColors.textColor),
   dialogTheme: DialogThemeData(
     backgroundColor: colorLightScheme.surface,
     surfaceTintColor: colorLightScheme.surface,
@@ -65,9 +63,7 @@ final ThemeData lightTheme = ThemeData(
   ),
   scrollbarTheme: ScrollbarThemeData(
     interactive: true,
-    thumbColor: WidgetStatePropertyAll<Color>(
-      ThemeColors.light.main,
-    ),
+    thumbColor: WidgetStatePropertyAll<Color>(ThemeColors.light.main),
     thickness: const WidgetStatePropertyAll<double>(5),
     minThumbLength: 100,
   ),
@@ -91,14 +87,14 @@ final ThemeData lightTheme = ThemeData(
       foregroundColor: WidgetStateProperty.resolveWith(
         (Set<WidgetState> states) => Colors.white,
       ),
-      backgroundColor: WidgetStateProperty.resolveWith(
-        (Set<WidgetState> states) {
-          if (states.contains(WidgetState.disabled)) {
-            return colorLightScheme.primary.withValues(alpha:0.4);
-          }
-          return colorLightScheme.primary;
-        },
-      ),
+      backgroundColor: WidgetStateProperty.resolveWith((
+        Set<WidgetState> states,
+      ) {
+        if (states.contains(WidgetState.disabled)) {
+          return colorLightScheme.primary.withValues(alpha: 0.4);
+        }
+        return colorLightScheme.primary;
+      }),
       textStyle: WidgetStatePropertyAll<TextStyle>(
         ThemeTextStyles.light.buttonStyle,
       ),
@@ -175,7 +171,7 @@ final ThemeData lightTheme = ThemeData(
     selectedItemColor: colorLightScheme.onPrimary,
     selectedIconTheme: IconThemeData(color: colorLightScheme.primary),
   ),
-  
+
   tabBarTheme: TabBarThemeData(
     indicatorColor: colorDarkScheme.primary,
     dividerHeight: 0,
@@ -185,14 +181,14 @@ final ThemeData lightTheme = ThemeData(
     labelStyle: const TextStyle(
       fontSize: 14,
       fontWeight: FontWeight.w500,
-      color: AppColors.black
+      color: AppColors.black,
     ),
     unselectedLabelStyle: const TextStyle(
       fontSize: 14,
       fontWeight: FontWeight.w400,
-      color: AppColors.buttonColords
+      color: AppColors.buttonColords,
     ),
-    
+
     indicatorSize: TabBarIndicatorSize.label,
   ),
   navigationBarTheme: NavigationBarThemeData(
@@ -200,9 +196,7 @@ final ThemeData lightTheme = ThemeData(
     backgroundColor: Colors.white,
     height: kToolbarHeight,
     iconTheme: WidgetStateProperty.resolveWith<IconThemeData>(
-      (Set<WidgetState> states) => const IconThemeData(
-        color: Colors.black,
-      ),
+      (Set<WidgetState> states) => const IconThemeData(color: Colors.black),
     ),
     labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>(
       (Set<WidgetState> states) => ThemeTextStyles.light.appBarTitle,
@@ -212,7 +206,7 @@ final ThemeData lightTheme = ThemeData(
   appBarTheme: AppBarTheme(
     elevation: 0,
     scrolledUnderElevation: 0,
-    systemOverlayStyle: systemUiOverlayStyleLight ,
+    systemOverlayStyle: systemUiOverlayStyleLight,
     iconTheme: const IconThemeData(color: Colors.white),
     shadowColor: Colors.transparent,
     titleTextStyle: const TextStyle(
@@ -221,16 +215,18 @@ final ThemeData lightTheme = ThemeData(
       fontWeight: FontWeight.w500,
     ),
     shape: ThemeCustomShapes.light.bottomRectangleBorder,
-   // toolbarTextStyle: ThemeTextStyles.light.appBarTitle,
+    // toolbarTextStyle: ThemeTextStyles.light.appBarTitle,
     backgroundColor: AppColors.white,
     surfaceTintColor: const Color.fromRGBO(28, 30, 33, 0.95),
   ),
   actionIconTheme: ActionIconThemeData(
     backButtonIconBuilder: (BuildContext context) => IconButton(
       onPressed: () => Navigator.maybePop(context),
-      icon: Platform.isAndroid
+      icon: kIsWeb
           ? const Icon(Icons.arrow_back)
-          : const Icon(Icons.arrow_back_ios_new_rounded),
+          : (Platform.isAndroid
+                ? const Icon(Icons.arrow_back)
+                : const Icon(Icons.arrow_back_ios_new_rounded)),
     ),
   ),
   listTileTheme: const ListTileThemeData(
@@ -276,17 +272,13 @@ final ThemeData lightTheme = ThemeData(
       fontWeight: FontWeight.w600,
       fontSize: 15,
     ),
-    displayLarge: TextStyle(
-      color: Colors.white,
-    ),
+    displayLarge: TextStyle(color: Colors.white),
     displayMedium: TextStyle(
       color: Colors.white,
       fontWeight: FontWeight.w600,
       fontSize: 17,
     ),
-    displaySmall: TextStyle(
-      color: Colors.white,
-    ),
+    displaySmall: TextStyle(color: Colors.white),
   ),
 );
 
@@ -299,9 +291,10 @@ final ThemeData darkTheme = ThemeData(
     ThemeTextStyles.dark,
     ThemeCustomShapes.dark,
   ],
- 
-  splashFactory:
-      Platform.isAndroid ? InkRipple.splashFactory : NoSplash.splashFactory,
+
+  splashFactory: kIsWeb
+      ? NoSplash.splashFactory
+      : (Platform.isAndroid ? InkRipple.splashFactory : NoSplash.splashFactory),
   visualDensity: VisualDensity.standard,
   materialTapTargetSize: MaterialTapTargetSize.padded,
   primaryColor: colorDarkScheme.primary,
@@ -309,7 +302,7 @@ final ThemeData darkTheme = ThemeData(
   scaffoldBackgroundColor: Colors.black,
   cardColor: colorDarkScheme.surface,
   canvasColor: colorDarkScheme.surface,
- 
+
   shadowColor: const Color(0xFF343434),
   progressIndicatorTheme: const ProgressIndicatorThemeData(
     color: Colors.white,
@@ -317,10 +310,7 @@ final ThemeData darkTheme = ThemeData(
     linearTrackColor: Colors.transparent,
     circularTrackColor: Colors.transparent,
   ),
-  dividerTheme:  DividerThemeData(
-    thickness: 1,
-    color: AppColors.white,
-  ),
+  dividerTheme: DividerThemeData(thickness: 1, color: AppColors.white),
   dialogTheme: DialogThemeData(
     backgroundColor: colorDarkScheme.surface,
     surfaceTintColor: colorDarkScheme.surface,
@@ -335,9 +325,7 @@ final ThemeData darkTheme = ThemeData(
   ),
   scrollbarTheme: ScrollbarThemeData(
     interactive: true,
-    thumbColor: WidgetStatePropertyAll<Color>(
-      ThemeColors.light.main,
-    ),
+    thumbColor: WidgetStatePropertyAll<Color>(ThemeColors.light.main),
     thickness: const WidgetStatePropertyAll<double>(5),
     minThumbLength: 100,
   ),
@@ -361,16 +349,17 @@ final ThemeData darkTheme = ThemeData(
       foregroundColor: WidgetStateProperty.resolveWith(
         (Set<WidgetState> states) => Colors.white,
       ),
-      backgroundColor:WidgetStateProperty.resolveWith(
-        (Set<WidgetState> states) {
-          if (states.contains(WidgetState.disabled)) {
-            return colorDarkScheme.primary.withValues(alpha:0.4);
-          }
-          return colorDarkScheme.primary;
-        },
+      backgroundColor: WidgetStateProperty.resolveWith((
+        Set<WidgetState> states,
+      ) {
+        if (states.contains(WidgetState.disabled)) {
+          return colorDarkScheme.primary.withValues(alpha: 0.4);
+        }
+        return colorDarkScheme.primary;
+      }),
+      textStyle: WidgetStatePropertyAll<TextStyle>(
+        ThemeTextStyles.dark.buttonStyle,
       ),
-      textStyle:
-          WidgetStatePropertyAll<TextStyle>(ThemeTextStyles.dark.buttonStyle),
       elevation: const WidgetStatePropertyAll<double>(0),
       shape: const WidgetStatePropertyAll<OutlinedBorder>(
         RoundedRectangleBorder(
@@ -424,7 +413,7 @@ final ThemeData darkTheme = ThemeData(
       borderSide: BorderSide(color: colorDarkScheme.error),
     ),
   ),
-/*  bottomSheetTheme: const BottomSheetThemeData(
+  /*  bottomSheetTheme: const BottomSheetThemeData(
     elevation: 0,
     showDragHandle: false,
     backgroundColor: Colors.white,
@@ -438,7 +427,7 @@ final ThemeData darkTheme = ThemeData(
   ),*/
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
     elevation: 0,
-        backgroundColor: Colors.transparent,
+    backgroundColor: Colors.transparent,
     type: BottomNavigationBarType.fixed,
     showSelectedLabels: true,
     selectedLabelStyle: const TextStyle(
@@ -464,14 +453,14 @@ final ThemeData darkTheme = ThemeData(
     labelStyle: const TextStyle(
       fontSize: 13,
       fontWeight: FontWeight.w500,
-      color: AppColors.white
+      color: AppColors.white,
     ),
     unselectedLabelStyle: const TextStyle(
       fontSize: 13,
       fontWeight: FontWeight.w500,
-      color: AppColors.buttonColords
+      color: AppColors.buttonColords,
     ),
-   
+
     indicatorSize: TabBarIndicatorSize.label,
   ),
   navigationBarTheme: NavigationBarThemeData(
@@ -479,9 +468,7 @@ final ThemeData darkTheme = ThemeData(
     backgroundColor: Colors.white,
     height: kToolbarHeight,
     iconTheme: WidgetStateProperty.resolveWith<IconThemeData>(
-      (Set<WidgetState> states) => const IconThemeData(
-        color: Colors.black,
-      ),
+      (Set<WidgetState> states) => const IconThemeData(color: Colors.black),
     ),
     labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>(
       (Set<WidgetState> states) => ThemeTextStyles.dark.appBarTitle,
@@ -492,7 +479,7 @@ final ThemeData darkTheme = ThemeData(
     scrolledUnderElevation: 0,
     systemOverlayStyle: systemUiOverlayStyleDark,
     iconTheme: const IconThemeData(color: Colors.white),
-          shadowColor: Colors.transparent,
+    shadowColor: Colors.transparent,
     titleTextStyle: const TextStyle(
       fontSize: 15,
       height: 20 / 15,
@@ -502,16 +489,16 @@ final ThemeData darkTheme = ThemeData(
     shape: ThemeCustomShapes.dark.bottomRectangleBorder,
     //toolbarTextStyle: ThemeTextStyles.dark.appBarTitle,
     backgroundColor: Colors.black,
-    surfaceTintColor:  Colors.transparent,
-    
-    
+    surfaceTintColor: Colors.transparent,
   ),
   actionIconTheme: ActionIconThemeData(
     backButtonIconBuilder: (BuildContext context) => IconButton(
       onPressed: () => Navigator.maybePop(context),
-      icon: Platform.isAndroid
+      icon: kIsWeb
           ? const Icon(Icons.arrow_back)
-          : const Icon(Icons.arrow_back_ios_new_rounded),
+          : (Platform.isAndroid
+                ? const Icon(Icons.arrow_back)
+                : const Icon(Icons.arrow_back_ios_new_rounded)),
     ),
   ),
   listTileTheme: const ListTileThemeData(
@@ -566,16 +553,12 @@ final ThemeData darkTheme = ThemeData(
       fontWeight: FontWeight.w600,
       fontSize: 15,
     ),
-    displayLarge: TextStyle(
-      color: Colors.white,
-    ),
+    displayLarge: TextStyle(color: Colors.white),
     displayMedium: TextStyle(
       color: Colors.white,
       fontWeight: FontWeight.w600,
       fontSize: 17,
     ),
-    displaySmall: TextStyle(
-      color: Colors.white,
-    ),
+    displaySmall: TextStyle(color: Colors.white),
   ),
 );

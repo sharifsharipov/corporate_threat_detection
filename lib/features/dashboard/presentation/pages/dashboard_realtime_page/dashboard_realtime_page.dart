@@ -1,4 +1,5 @@
 import 'package:corporate_threat_detection/core/common/custom_app_bar.dart';
+import 'package:corporate_threat_detection/features/dashboard/presentation/pages/dashboard_realtime_page/dashboard_realtime_body.dart';
 import 'package:corporate_threat_detection/features/dashboard/presentation/pages/dashboard_realtime_page/dashboard_realtime_mixin.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +14,7 @@ class _DashboardRealtimePageState extends State<DashboardRealtimePage>
     with DashboardRealtimeMixin {
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: const CustomAppBar(title: 'Dashboard Realtime'),
-    body: const Center(child: Text('Welcome to the Dashboard Realtime Page!')),
+    appBar: const CustomAppBar(title: 'Realtime Monitoring'),
+    body: DashboardRealtimeBody(mixin: this),
   );
 }

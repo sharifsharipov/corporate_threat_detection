@@ -173,7 +173,15 @@ void _bloc() {
 
 Future<void> _initHive() async {
   const String boxName = "corporate_threat_detection_box";
-  final Directory directory = await getApplicationDocumentsDirectory();
-  Hive.init(directory.path);
+
+  if (kIsWeb) {
+    // Web platform uses IndexedDB, no path required
+    Hive.init('');
+  } else {
+    // Mobile/Desktop platforms use file system
+    final Directory directory = await getApplicationDocumentsDirectory();
+    Hive.init(directory.path);
+  }
+
   _box = await Hive.openBox<dynamic>(boxName);
 }

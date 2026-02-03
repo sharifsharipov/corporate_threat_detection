@@ -1,5 +1,7 @@
 import 'package:corporate_threat_detection/core/common/custom_app_bar.dart';
+import 'package:corporate_threat_detection/features/logs/presentation/pages/history_page/history_body.dart';
 import 'package:corporate_threat_detection/features/logs/presentation/pages/history_page/history_mixin.dart';
+import 'package:corporate_threat_detection/features/dashboard/presentation/widgets/dashboard_drawer.dart';
 import 'package:flutter/material.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -12,7 +14,12 @@ class HistoryPage extends StatefulWidget {
 class _HistoryPageState extends State<HistoryPage> with HistoryMixin {
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: const CustomAppBar(title: 'History'),
-    body: const Center(child: Text('Welcome to the History Page!')),
+    appBar: const CustomAppBar(
+      title: 'History',
+      leadingVisible: true,
+      customLeading: false,
+    ),
+    drawer: const DashboardDrawer(),
+    body: HistoryBody(mixin: this),
   );
 }

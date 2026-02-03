@@ -1,5 +1,7 @@
 import 'package:corporate_threat_detection/core/common/custom_app_bar.dart';
+import 'package:corporate_threat_detection/features/analytics/presentation/pages/analytics_page/analytics_body.dart';
 import 'package:corporate_threat_detection/features/analytics/presentation/pages/analytics_page/analytics_mixin.dart';
+import 'package:corporate_threat_detection/features/dashboard/presentation/widgets/dashboard_drawer.dart';
 import 'package:flutter/material.dart';
 
 class AnalyticsPage extends StatefulWidget {
@@ -12,7 +14,12 @@ class AnalyticsPage extends StatefulWidget {
 class _AnalyticsPageState extends State<AnalyticsPage> with AnalyticsMixin {
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: CustomAppBar(title: 'Analytics'),
-    body: const Center(child: Text('Welcome to the Analytics Page!')),
+    appBar: const CustomAppBar(
+      title: 'Analytics',
+      leadingVisible: true,
+      customLeading: false,
+    ),
+    drawer: const DashboardDrawer(),
+    body: AnalyticsBody(mixin: this),
   );
 }
