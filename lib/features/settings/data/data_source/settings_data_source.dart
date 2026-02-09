@@ -6,6 +6,7 @@ abstract class SettingsDataSource {
   Stream<List<AppSettingModel>> streamAppSettings();
   Future<UserProfileModel> getUserProfile(String uid);
   Stream<UserProfileModel> streamUserProfile(String uid);
+  Stream<List<UserProfileModel>> streamUserProfiles({int limit = 200});
   Future<void> updateSetting(AppSettingModel setting);
   Future<void> updateUserProfile(String uid, Map<String, dynamic> data);
 }

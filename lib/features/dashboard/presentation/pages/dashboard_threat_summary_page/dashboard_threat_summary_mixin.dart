@@ -1,6 +1,7 @@
 import 'package:corporate_threat_detection/core/themes/colors/app_colors.dart';
+import 'package:corporate_threat_detection/features/dashboard/data/models/day_threat_data/day_threat_data.dart';
 import 'package:corporate_threat_detection/features/dashboard/presentation/pages/dashboard_threat_summary_page/dashboard_threat_summary_page.dart';
-import 'package:corporate_threat_detection/features/dashboard/presentation/pages/dashboard_threat_summary_page/widgets/threat_timeline_chart.dart';
+
 import 'package:corporate_threat_detection/features/dashboard/presentation/pages/dashboard_threat_summary_page/widgets/top_threat_item.dart';
 import 'package:flutter/material.dart';
 

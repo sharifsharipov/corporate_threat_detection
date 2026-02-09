@@ -8,6 +8,9 @@ abstract class SettingsRepository {
   Stream<Either<Failure, List<AppSettingModel>>> streamAppSettings();
   Future<Either<Failure, UserProfileModel>> getUserProfile(String uid);
   Stream<Either<Failure, UserProfileModel>> streamUserProfile(String uid);
+  Stream<Either<Failure, List<UserProfileModel>>> streamUserProfiles({
+    int limit = 200,
+  });
   Future<Either<Failure, void>> updateSetting(AppSettingModel setting);
   Future<Either<Failure, void>> updateUserProfile(
     String uid,

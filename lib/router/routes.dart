@@ -33,6 +33,7 @@ import 'package:corporate_threat_detection/features/network/presentation/pages/d
 import 'package:corporate_threat_detection/features/network/presentation/pages/device_api_usage_page/device_api_usage_page.dart';
 import 'package:corporate_threat_detection/features/network/presentation/pages/network_protocols_page/network_protocols_page.dart';
 import 'package:corporate_threat_detection/features/network/presentation/pages/network_traffic_logs_page/network_traffic_logs_page.dart';
+import 'package:corporate_threat_detection/features/network/data/models/network_device_model/network_device_model.dart';
 
 // Methods
 import 'package:corporate_threat_detection/features/methods/presentation/pages/method_anomaly_page/method_anomaly_page.dart';

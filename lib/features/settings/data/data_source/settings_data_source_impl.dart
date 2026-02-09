@@ -108,6 +108,19 @@ class SettingsDataSourceImpl implements SettingsDataSource {
   }
 
   @override
+  Stream<List<UserProfileModel>> streamUserProfiles({int limit = 200}) {
+    return firestore
+        .collection('user_profiles')
+        .limit(limit)
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs
+              .map((doc) => UserProfileModel.fromJson(_normalizeProfileData(doc)))
+              .toList(),
+        );
+  }
+
+  @override
   Future<void> updateSetting(AppSettingModel setting) async {
     await firestore.collection('app_settings').doc(setting.key).set(
       <String, dynamic>{

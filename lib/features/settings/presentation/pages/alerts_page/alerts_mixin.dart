@@ -1,6 +1,7 @@
+import 'package:corporate_threat_detection/features/dashboard/data/models/alert_model/alert_model.dart';
+import 'package:corporate_threat_detection/features/settings/data/models/alert_item_model/alert_item_model.dart' hide AlertSeverity;
 import 'package:corporate_threat_detection/features/settings/presentation/pages/alerts_page/alerts_page.dart';
 import 'package:corporate_threat_detection/features/settings/presentation/pages/alerts_page/widgets/alert_filter_tabs.dart';
-import 'package:corporate_threat_detection/features/settings/presentation/pages/alerts_page/widgets/alert_item_card.dart';
 import 'package:flutter/material.dart';
 
 mixin AlertsMixin on State<AlertsPage> {

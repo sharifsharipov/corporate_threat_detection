@@ -1,104 +1,138 @@
 import 'package:corporate_threat_detection/core/themes/colors/app_colors.dart';
-import 'package:corporate_threat_detection/features/dashboard/presentation/pages/dashboard_threat_summary_page/dashboard_threat_summary_mixin.dart';
+import 'package:corporate_threat_detection/features/dashboard/data/models/threat_summary_model/threat_summary_model.dart';
+import 'package:corporate_threat_detection/features/dashboard/presentation/bloc/dashboard_threat_summary_cubit.dart';
+import 'package:corporate_threat_detection/features/dashboard/presentation/bloc/dashboard_threat_summary_state.dart';
 import 'package:corporate_threat_detection/features/dashboard/presentation/pages/dashboard_threat_summary_page/widgets/severity_distribution_chart.dart';
 import 'package:corporate_threat_detection/features/dashboard/presentation/pages/dashboard_threat_summary_page/widgets/threat_category_card.dart';
 import 'package:corporate_threat_detection/features/dashboard/presentation/pages/dashboard_threat_summary_page/widgets/threat_timeline_chart.dart';
 import 'package:corporate_threat_detection/features/dashboard/presentation/pages/dashboard_threat_summary_page/widgets/top_threat_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DashboardThreatSummaryBody extends StatelessWidget {
-  final DashboardThreatSummaryMixin mixin;
-
-  const DashboardThreatSummaryBody({super.key, required this.mixin});
+  const DashboardThreatSummaryBody({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: AppColors.c_f0f2f4,
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Summary Statistics
-            _buildSummaryCards(),
-            const SizedBox(height: 20),
-
-            // Timeline Chart
-            ThreatTimelineChart(data: mixin.timelineData),
-            const SizedBox(height: 20),
-
-            // Severity Distribution
-            SeverityDistributionChart(
-              critical: mixin.criticalCount,
-              high: mixin.highCount,
-              medium: mixin.mediumCount,
-              low: mixin.lowCount,
-            ),
-            const SizedBox(height: 20),
-
-            // Threat Categories
-            const Text(
-              'Threat Categories',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
+    return BlocBuilder<DashboardThreatSummaryCubit, DashboardThreatSummaryState>(
+      builder: (context, state) {
+        if (state.isLoading && state.summary == null) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (state.errorMessage != null && state.summary == null) {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text(
+                state.errorMessage!,
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.grey.shade700),
               ),
             ),
-            const SizedBox(height: 12),
-            ...mixin.categories.entries.map((entry) {
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: ThreatCategoryCard(
-                  icon: entry.value.icon,
-                  category: entry.key,
-                  count: entry.value.count,
-                  total: mixin.totalThreats,
-                  color: entry.value.color,
-                ),
-              );
-            }),
-            const SizedBox(height: 20),
+          );
+        }
 
-            // Top Threats
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        final summary = state.summary;
+        if (summary == null) {
+          return Center(
+            child: Text(
+              'Threat summary not available',
+              style: TextStyle(color: Colors.grey.shade600),
+            ),
+          );
+        }
+
+        return Container(
+          color: AppColors.c_f0f2f4,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Summary Statistics
+                _buildSummaryCards(summary),
+                const SizedBox(height: 20),
+
+                // Timeline Chart
+                ThreatTimelineChart(data: summary.timelineData),
+                const SizedBox(height: 20),
+
+                // Severity Distribution
+                SeverityDistributionChart(
+                  critical: summary.criticalCount,
+                  high: summary.highCount,
+                  medium: summary.mediumCount,
+                  low: summary.lowCount,
+                ),
+                const SizedBox(height: 20),
+
+                // Threat Categories
                 const Text(
-                  'Top Threats',
+                  'Threat Categories',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Colors.black87,
                   ),
                 ),
-                TextButton(
-                  onPressed: () {
-                    // Navigate to all threats
-                  },
-                  child: const Text('View All'),
+                const SizedBox(height: 12),
+                ...summary.categories.map((category) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: ThreatCategoryCard(
+                      icon: IconData(
+                        category.iconCodePoint,
+                        fontFamily: 'MaterialIcons',
+                      ),
+                      category: category.name,
+                      count: category.count,
+                      total: summary.totalThreats,
+                      color: Color(category.colorValue),
+                    ),
+                  );
+                }),
+                const SizedBox(height: 20),
+
+                // Top Threats
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Top Threats',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        // Navigate to all threats
+                      },
+                      child: const Text('View All'),
+                    ),
+                  ],
                 ),
+                const SizedBox(height: 12),
+                ...summary.topThreats.map((threat) {
+                  return TopThreatItem(
+                    name: threat.name,
+                    description: threat.description,
+                    count: threat.count,
+                    severity: _mapSeverity(threat.severity),
+                    isIncreasing: threat.isIncreasing,
+                  );
+                }),
+                const SizedBox(height: 20),
               ],
             ),
-            const SizedBox(height: 12),
-            ...mixin.topThreats.map((threat) {
-              return TopThreatItem(
-                name: threat.name,
-                description: threat.description,
-                count: threat.count,
-                severity: threat.severity,
-                isIncreasing: threat.isIncreasing,
-              );
-            }),
-            const SizedBox(height: 20),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildSummaryCards() {
+  Widget _buildSummaryCards(ThreatSummaryModel summary) {
     return GridView.count(
       crossAxisCount: 2,
       shrinkWrap: true,
@@ -109,25 +143,25 @@ class DashboardThreatSummaryBody extends StatelessWidget {
       children: [
         _buildSummaryCard(
           'Total Threats',
-          '${mixin.totalThreats}',
+          '${summary.totalThreats}',
           Icons.shield_rounded,
           AppColors.buttonColor,
         ),
         _buildSummaryCard(
           'Critical',
-          '${mixin.criticalCount}',
+          '${summary.criticalCount}',
           Icons.dangerous_rounded,
           const Color(0xFF8B0000),
         ),
         _buildSummaryCard(
           'High Priority',
-          '${mixin.highCount}',
+          '${summary.highCount}',
           Icons.error_rounded,
           AppColors.c_F71E52,
         ),
         _buildSummaryCard(
           'Categories',
-          '${mixin.categories.length}',
+          '${summary.categories.length}',
           Icons.category_rounded,
           AppColors.c_F7931E,
         ),
@@ -187,5 +221,18 @@ class DashboardThreatSummaryBody extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  ThreatSeverity _mapSeverity(String value) {
+    switch (value.toLowerCase()) {
+      case 'critical':
+        return ThreatSeverity.critical;
+      case 'high':
+        return ThreatSeverity.high;
+      case 'low':
+        return ThreatSeverity.low;
+      default:
+        return ThreatSeverity.medium;
+    }
   }
 }

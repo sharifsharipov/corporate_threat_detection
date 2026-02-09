@@ -1,9 +1,6 @@
 import 'package:corporate_threat_detection/core/themes/colors/app_colors.dart';
+import 'package:corporate_threat_detection/features/settings/data/models/alert_item_model/alert_item_model.dart';
 import 'package:flutter/material.dart';
-
-enum AlertSeverity { critical, high, medium, low }
-
-enum AlertStatus { active, acknowledged, resolved }
 
 class AlertItemCard extends StatelessWidget {
   final String id;

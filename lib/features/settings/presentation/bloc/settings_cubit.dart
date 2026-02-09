@@ -39,40 +39,57 @@ class SettingsCubit extends Cubit<SettingsState> {
     _settingsSub?.cancel();
     _profileSub?.cancel();
 
-    _settingsSub = streamAppSettingsUseCase().listen((result) {
-      result.either(
-        (failure) => emit(
-          state.copyWith(isLoading: false, errorMessage: failure.message),
-        ),
-        (settings) => emit(
-          state.copyWith(
-            isLoading: false,
-            settings: {for (final s in settings) s.key: s},
-            errorMessage: null,
+    _settingsSub = streamAppSettingsUseCase().listen(
+      (result) {
+        result.either(
+          (failure) => emit(
+            state.copyWith(isLoading: false, errorMessage: failure.message),
           ),
-        ),
-      );
-    }, onError: (Object error) {
-      emit(state.copyWith(isLoading: false, errorMessage: error.toString()));
-    });
+          (settings) => emit(
+            state.copyWith(
+              isLoading: false,
+              settings: {for (final s in settings) s.key: s},
+              errorMessage: null,
+            ),
+          ),
+        );
+      },
+      onError: (Object error) {
+        emit(state.copyWith(isLoading: false, errorMessage: error.toString()));
+      },
+    );
 
-    _profileSub = streamUserProfileUseCase(uid).listen((result) {
-      result.either(
-        (failure) => emit(
-          state.copyWith(isLoading: false, errorMessage: failure.message),
-        ),
-        (profile) => emit(
-          state.copyWith(
-            isLoading: false,
-            profile: profile,
-            errorMessage: null,
+    _profileSub = streamUserProfileUseCase(uid).listen(
+      (result) {
+        result.either(
+          (failure) => emit(
+            state.copyWith(isLoading: false, errorMessage: failure.message),
           ),
-        ),
-      );
-    }, onError: (Object error) {
-      emit(state.copyWith(isLoading: false, errorMessage: error.toString()));
-    });
+          (profile) => emit(
+            state.copyWith(
+              isLoading: false,
+              profile: profile.displayName.isEmpty
+                  ? _mockProfile.copyWith(uid: uid)
+                  : profile,
+              errorMessage: null,
+            ),
+          ),
+        );
+      },
+      onError: (Object error) {
+        emit(state.copyWith(isLoading: false, errorMessage: error.toString()));
+      },
+    );
   }
+
+  static final UserProfileModel _mockProfile = UserProfileModel(
+    uid: 'mock-uid',
+    email: 'sharif@example.com',
+    displayName: 'Sharif Sharipov',
+    photoUrl: null,
+    role: UserRole.admin,
+    isActive: true,
+  );
 
   bool getBool(String key, {bool fallback = false}) {
     final setting = state.settings[key];
@@ -91,38 +108,40 @@ class SettingsCubit extends Cubit<SettingsState> {
   }
 
   Future<void> updateBoolSetting(String key, bool value) async {
+    // Optimistic update
     final setting = AppSettingModel(
       key: key,
       value: value,
       type: 'bool',
       description: state.settings[key]?.description,
     );
+    final updated = Map<String, AppSettingModel>.from(state.settings)
+      ..[key] = setting;
+    emit(state.copyWith(settings: updated, errorMessage: null));
+
     final result = await updateSettingUseCase(setting);
     result.either(
       (failure) => emit(state.copyWith(errorMessage: failure.message)),
-      (_) {
-        final updated = Map<String, AppSettingModel>.from(state.settings)
-          ..[key] = setting;
-        emit(state.copyWith(settings: updated, errorMessage: null));
-      },
+      (_) => null,
     );
   }
 
   Future<void> updateStringSetting(String key, String value) async {
+    // Optimistic update
     final setting = AppSettingModel(
       key: key,
       value: value,
       type: 'string',
       description: state.settings[key]?.description,
     );
+    final updated = Map<String, AppSettingModel>.from(state.settings)
+      ..[key] = setting;
+    emit(state.copyWith(settings: updated, errorMessage: null));
+
     final result = await updateSettingUseCase(setting);
     result.either(
       (failure) => emit(state.copyWith(errorMessage: failure.message)),
-      (_) {
-        final updated = Map<String, AppSettingModel>.from(state.settings)
-          ..[key] = setting;
-        emit(state.copyWith(settings: updated, errorMessage: null));
-      },
+      (_) => null,
     );
   }
 
@@ -131,6 +150,15 @@ class SettingsCubit extends Cubit<SettingsState> {
     String? displayName,
     String? photoUrl,
   }) async {
+    // Optimistic update
+    if (state.profile != null) {
+      final updatedProfile = state.profile!.copyWith(
+        displayName: displayName ?? state.profile!.displayName,
+        photoUrl: photoUrl ?? state.profile!.photoUrl,
+      );
+      emit(state.copyWith(profile: updatedProfile));
+    }
+
     final data = <String, dynamic>{};
     if (displayName != null) data['displayName'] = displayName;
     if (photoUrl != null) data['photoUrl'] = photoUrl;

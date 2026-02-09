@@ -67,6 +67,21 @@ class SettingsRepositoryImpl implements SettingsRepository {
   }
 
   @override
+  Stream<Either<Failure, List<UserProfileModel>>> streamUserProfiles({
+    int limit = 200,
+  }) {
+    try {
+      return dataSource
+          .streamUserProfiles(limit: limit)
+          .map((profiles) => Right<Failure, List<UserProfileModel>>(profiles));
+    } on FirebaseException catch (e) {
+      return Stream.value(Left(ServerFailure(message: e.message ?? e.code)));
+    } catch (e) {
+      return Stream.value(Left(UnexpectedFailure(message: e.toString())));
+    }
+  }
+
+  @override
   Future<Either<Failure, void>> updateSetting(AppSettingModel setting) async {
     try {
       await dataSource.updateSetting(setting);

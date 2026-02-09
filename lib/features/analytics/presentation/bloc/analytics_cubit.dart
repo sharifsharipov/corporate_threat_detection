@@ -40,78 +40,91 @@ class AnalyticsCubit extends Cubit<AnalyticsState> {
     _vectorsSub?.cancel();
     _responseSub?.cancel();
 
-    _metricsSub = streamPerformanceMetricsUseCase().listen((result) {
-      result.either(
-        (failure) => emit(
-          state.copyWith(isLoading: false, errorMessage: failure.message),
-        ),
-        (metrics) => emit(
-          state.copyWith(
-            isLoading: false,
-            metrics: _mapMetrics(metrics),
-            errorMessage: null,
+    _metricsSub = streamPerformanceMetricsUseCase().listen(
+      (result) {
+        result.either(
+          (failure) => emit(
+            state.copyWith(isLoading: false, errorMessage: failure.message),
           ),
-        ),
-      );
-    }, onError: (Object error) {
-      emit(state.copyWith(isLoading: false, errorMessage: error.toString()));
-    });
+          (metrics) => emit(
+            state.copyWith(
+              isLoading: false,
+              metrics: _mapMetrics(metrics),
+              errorMessage: null,
+            ),
+          ),
+        );
+      },
+      onError: (Object error) {
+        emit(state.copyWith(isLoading: false, errorMessage: error.toString()));
+      },
+    );
 
-    _trendsSub = streamMonthlyTrendsUseCase().listen((result) {
-      result.either(
-        (failure) => emit(
-          state.copyWith(isLoading: false, errorMessage: failure.message),
-        ),
-        (trends) => emit(
-          state.copyWith(
-            isLoading: false,
-            trends: _mapTrends(trends),
-            errorMessage: null,
+    _trendsSub = streamMonthlyTrendsUseCase().listen(
+      (result) {
+        result.either(
+          (failure) => emit(
+            state.copyWith(isLoading: false, errorMessage: failure.message),
           ),
-        ),
-      );
-    }, onError: (Object error) {
-      emit(state.copyWith(isLoading: false, errorMessage: error.toString()));
-    });
+          (trends) => emit(
+            state.copyWith(
+              isLoading: false,
+              trends: _mapTrends(trends),
+              errorMessage: null,
+            ),
+          ),
+        );
+      },
+      onError: (Object error) {
+        emit(state.copyWith(isLoading: false, errorMessage: error.toString()));
+      },
+    );
 
-    _vectorsSub = streamAttackVectorsUseCase().listen((result) {
-      result.either(
-        (failure) => emit(
-          state.copyWith(isLoading: false, errorMessage: failure.message),
-        ),
-        (vectors) => emit(
-          state.copyWith(
-            isLoading: false,
-            attackVectors: _mapVectors(vectors),
-            errorMessage: null,
+    _vectorsSub = streamAttackVectorsUseCase().listen(
+      (result) {
+        result.either(
+          (failure) => emit(
+            state.copyWith(isLoading: false, errorMessage: failure.message),
           ),
-        ),
-      );
-    }, onError: (Object error) {
-      emit(state.copyWith(isLoading: false, errorMessage: error.toString()));
-    });
+          (vectors) => emit(
+            state.copyWith(
+              isLoading: false,
+              attackVectors: _mapVectors(vectors),
+              errorMessage: null,
+            ),
+          ),
+        );
+      },
+      onError: (Object error) {
+        emit(state.copyWith(isLoading: false, errorMessage: error.toString()));
+      },
+    );
 
-    _responseSub = streamResponseTimeUseCase().listen((result) {
-      result.either(
-        (failure) => emit(
-          state.copyWith(isLoading: false, errorMessage: failure.message),
-        ),
-        (response) => emit(
-          state.copyWith(
-            isLoading: false,
-            responseTime: _mapResponseTime(response),
-            errorMessage: null,
+    _responseSub = streamResponseTimeUseCase().listen(
+      (result) {
+        result.either(
+          (failure) => emit(
+            state.copyWith(isLoading: false, errorMessage: failure.message),
           ),
-        ),
-      );
-    }, onError: (Object error) {
-      emit(state.copyWith(isLoading: false, errorMessage: error.toString()));
-    });
+          (response) => emit(
+            state.copyWith(
+              isLoading: false,
+              responseTime: _mapResponseTime(response),
+              errorMessage: null,
+            ),
+          ),
+        );
+      },
+      onError: (Object error) {
+        emit(state.copyWith(isLoading: false, errorMessage: error.toString()));
+      },
+    );
   }
 
-  Map<String, MetricData> _mapMetrics(
-    List<PerformanceMetricModel> metrics,
-  ) {
+  Map<String, MetricData> _mapMetrics(List<PerformanceMetricModel> metrics) {
+    if (metrics.isEmpty) {
+      return _mockMetrics;
+    }
     final Map<String, MetricData> mapped = {};
     for (final metric in metrics) {
       mapped[metric.title] = MetricData(
@@ -122,23 +135,13 @@ class AnalyticsCubit extends Cubit<AnalyticsState> {
         isIncrease: metric.isIncrease,
       );
     }
-
-    if (mapped.isEmpty) {
-      return {
-        'Detection Rate': MetricData(
-          value: '0%',
-          icon: Icons.shield_outlined,
-          color: AppColors.c_03A64B,
-          changePercentage: 0,
-          isIncrease: true,
-        ),
-      };
-    }
-
     return mapped;
   }
 
   List<MonthlyTrendData> _mapTrends(List<MonthlyTrendModel> trends) {
+    if (trends.isEmpty) {
+      return _mockTrendData;
+    }
     return trends
         .map(
           (trend) => MonthlyTrendData(
@@ -151,9 +154,10 @@ class AnalyticsCubit extends Cubit<AnalyticsState> {
         .toList();
   }
 
-  Map<String, AttackVectorData> _mapVectors(
-    List<AttackVectorModel> vectors,
-  ) {
+  Map<String, AttackVectorData> _mapVectors(List<AttackVectorModel> vectors) {
+    if (vectors.isEmpty) {
+      return _mockAttackVectors;
+    }
     final Map<String, AttackVectorData> mapped = {};
     for (final vector in vectors) {
       mapped[vector.name] = AttackVectorData(
@@ -165,12 +169,100 @@ class AnalyticsCubit extends Cubit<AnalyticsState> {
   }
 
   ResponseTimeData _mapResponseTime(ResponseTimeModel response) {
+    if (response.averageMs == 0) {
+      return _mockResponseTime;
+    }
     return ResponseTimeData(
       averageMs: response.averageMs,
       minMs: response.minMs,
       maxMs: response.maxMs,
     );
   }
+
+  static final Map<String, MetricData> _mockMetrics = {
+    'Detection Rate': MetricData(
+      value: '98.7%',
+      icon: Icons.shield_outlined,
+      color: AppColors.c_03A64B,
+      changePercentage: 2.3,
+      isIncrease: true,
+    ),
+    'Blocked Threats': MetricData(
+      value: '1,247',
+      icon: Icons.block,
+      color: AppColors.c_F71E52,
+      changePercentage: 15.8,
+      isIncrease: true,
+    ),
+    'Avg Response': MetricData(
+      value: '245ms',
+      icon: Icons.speed,
+      color: AppColors.buttonColor,
+      changePercentage: 8.2,
+      isIncrease: false,
+    ),
+    'System Uptime': MetricData(
+      value: '99.9%',
+      icon: Icons.check_circle_outline,
+      color: AppColors.c_03A64B,
+      changePercentage: 0.1,
+      isIncrease: true,
+    ),
+  };
+
+  static final List<MonthlyTrendData> _mockTrendData = [
+    MonthlyTrendData(
+      month: 'Jul',
+      detected: 890,
+      blocked: 875,
+      falsePositives: 12,
+    ),
+    MonthlyTrendData(
+      month: 'Aug',
+      detected: 920,
+      blocked: 902,
+      falsePositives: 15,
+    ),
+    MonthlyTrendData(
+      month: 'Sep',
+      detected: 1050,
+      blocked: 1032,
+      falsePositives: 18,
+    ),
+    MonthlyTrendData(
+      month: 'Oct',
+      detected: 980,
+      blocked: 965,
+      falsePositives: 14,
+    ),
+    MonthlyTrendData(
+      month: 'Nov',
+      detected: 1120,
+      blocked: 1098,
+      falsePositives: 20,
+    ),
+    MonthlyTrendData(
+      month: 'Dec',
+      detected: 1247,
+      blocked: 1230,
+      falsePositives: 17,
+    ),
+  ];
+
+  static final Map<String, AttackVectorData> _mockAttackVectors = {
+    'Malware': AttackVectorData(count: 342, color: AppColors.c_F71E52),
+    'Phishing': AttackVectorData(count: 287, color: AppColors.c_F7931E),
+    'DDoS': AttackVectorData(count: 156, color: const Color(0xFF8B0000)),
+    'Ransomware': AttackVectorData(count: 98, color: const Color(0xFF5856D6)),
+    'SQL Injection': AttackVectorData(count: 234, color: AppColors.buttonColor),
+    'XSS': AttackVectorData(count: 130, color: AppColors.c_03A64B),
+  };
+
+  static const ResponseTimeData _mockResponseTime = ResponseTimeData(
+    averageMs: 245,
+    minMs: 85,
+    maxMs: 1250,
+  );
 
   @override
   Future<void> close() {

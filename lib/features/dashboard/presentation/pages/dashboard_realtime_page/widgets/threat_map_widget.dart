@@ -37,6 +37,17 @@ class _ThreatMapWidgetState extends State<ThreatMapWidget>
     _initAnimations();
   }
 
+  @override
+  void didUpdateWidget(covariant ThreatMapWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.locations.length != widget.locations.length) {
+      for (final controller in _pulseControllers) {
+        controller.dispose();
+      }
+      _initAnimations();
+    }
+  }
+
   void _initAnimations() {
     _pulseControllers = List.generate(
       widget.locations.length,

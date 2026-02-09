@@ -26,11 +26,14 @@ class LogsCubit extends Cubit<LogsState> {
       GetSystemLogsParams(limit: limit),
     );
     result.either(
-      (failure) => emit(
-        state.copyWith(isLoading: false, errorMessage: failure.message),
-      ),
+      (failure) =>
+          emit(state.copyWith(isLoading: false, errorMessage: failure.message)),
       (logs) => emit(
-        state.copyWith(isLoading: false, logs: logs, errorMessage: null),
+        state.copyWith(
+          isLoading: false,
+          logs: logs.isNotEmpty ? logs : _mockLogs,
+          errorMessage: null,
+        ),
       ),
     );
   }
@@ -38,21 +41,62 @@ class LogsCubit extends Cubit<LogsState> {
   void startRealtime({int limit = 200}) {
     emit(state.copyWith(isLoading: true, errorMessage: null));
     _logsSubscription?.cancel();
-    _logsSubscription = streamSystemLogsUseCase(
-      StreamSystemLogsParams(limit: limit),
-    ).listen((result) {
-      result.either(
-        (failure) => emit(
-          state.copyWith(isLoading: false, errorMessage: failure.message),
-        ),
-        (logs) => emit(
-          state.copyWith(isLoading: false, logs: logs, errorMessage: null),
-        ),
-      );
-    }, onError: (Object error) {
-      emit(state.copyWith(isLoading: false, errorMessage: error.toString()));
-    });
+    _logsSubscription =
+        streamSystemLogsUseCase(StreamSystemLogsParams(limit: limit)).listen(
+          (result) {
+            result.either(
+              (failure) => emit(
+                state.copyWith(isLoading: false, errorMessage: failure.message),
+              ),
+              (logs) => emit(
+                state.copyWith(
+                  isLoading: false,
+                  logs: logs.isNotEmpty ? logs : _mockLogs,
+                  errorMessage: null,
+                ),
+              ),
+            );
+          },
+          onError: (Object error) {
+            emit(
+              state.copyWith(isLoading: false, errorMessage: error.toString()),
+            );
+          },
+        );
   }
+
+  static final List<SystemLogModel> _mockLogs = [
+    SystemLogModel(
+      timestamp: DateTime.now().subtract(const Duration(seconds: 10)),
+      level: LogLevel.info,
+      source: 'AUTH-MODULE',
+      message: 'User admin logged in from 10.0.0.5',
+    ),
+    SystemLogModel(
+      timestamp: DateTime.now().subtract(const Duration(seconds: 45)),
+      level: LogLevel.warning,
+      source: 'FIREWALL',
+      message: 'Blocked connection attempt from 185.12.33.4:443',
+    ),
+    SystemLogModel(
+      timestamp: DateTime.now().subtract(const Duration(minutes: 2)),
+      level: LogLevel.error,
+      source: 'DATABASE',
+      message: 'Connection timeout on DB-CLUSTER-POOL-1',
+    ),
+    SystemLogModel(
+      timestamp: DateTime.now().subtract(const Duration(minutes: 5)),
+      level: LogLevel.error,
+      source: 'IDS',
+      message: 'Potential remote code execution attempt detected!',
+    ),
+    SystemLogModel(
+      timestamp: DateTime.now().subtract(const Duration(minutes: 12)),
+      level: LogLevel.info,
+      source: 'SYSTEM',
+      message: 'Automatic security patch deployed successfully',
+    ),
+  ];
 
   void startRealtimeByLevel(LogLevel? level, {int limit = 200}) {
     emit(state.copyWith(isLoading: true, errorMessage: null));
@@ -61,20 +105,30 @@ class LogsCubit extends Cubit<LogsState> {
       startRealtime(limit: limit);
       return;
     }
-    _logsSubscription = streamSystemLogsByLevelUseCase(
-      StreamSystemLogsByLevelParams(level: level, limit: limit),
-    ).listen((result) {
-      result.either(
-        (failure) => emit(
-          state.copyWith(isLoading: false, errorMessage: failure.message),
-        ),
-        (logs) => emit(
-          state.copyWith(isLoading: false, logs: logs, errorMessage: null),
-        ),
-      );
-    }, onError: (Object error) {
-      emit(state.copyWith(isLoading: false, errorMessage: error.toString()));
-    });
+    _logsSubscription =
+        streamSystemLogsByLevelUseCase(
+          StreamSystemLogsByLevelParams(level: level, limit: limit),
+        ).listen(
+          (result) {
+            result.either(
+              (failure) => emit(
+                state.copyWith(isLoading: false, errorMessage: failure.message),
+              ),
+              (logs) => emit(
+                state.copyWith(
+                  isLoading: false,
+                  logs: logs,
+                  errorMessage: null,
+                ),
+              ),
+            );
+          },
+          onError: (Object error) {
+            emit(
+              state.copyWith(isLoading: false, errorMessage: error.toString()),
+            );
+          },
+        );
   }
 
   void setLevel(LogLevel? level) {

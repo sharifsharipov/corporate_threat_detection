@@ -30,11 +30,14 @@ class ThreatsCubit extends Cubit<ThreatsState> {
     emit(state.copyWith(isLoading: true, errorMessage: null));
     final result = await getThreatsUseCase(NoParams());
     result.either(
-      (failure) => emit(
-        state.copyWith(isLoading: false, errorMessage: failure.message),
-      ),
+      (failure) =>
+          emit(state.copyWith(isLoading: false, errorMessage: failure.message)),
       (threats) => emit(
-        state.copyWith(isLoading: false, threats: threats, errorMessage: null),
+        state.copyWith(
+          isLoading: false,
+          threats: threats.isNotEmpty ? threats : _mockThreats,
+          errorMessage: null,
+        ),
       ),
     );
   }
@@ -42,65 +45,106 @@ class ThreatsCubit extends Cubit<ThreatsState> {
   void startRealtime() {
     emit(state.copyWith(isLoading: true, errorMessage: null));
     _threatsSubscription?.cancel();
-    _threatsSubscription =
-        streamThreatsUseCase(NoParams()).listen((result) {
-      result.either(
-        (failure) => emit(
-          state.copyWith(isLoading: false, errorMessage: failure.message),
-        ),
-        (threats) => emit(
-          state.copyWith(
-            isLoading: false,
-            threats: threats,
-            errorMessage: null,
+    _threatsSubscription = streamThreatsUseCase(NoParams()).listen(
+      (result) {
+        result.either(
+          (failure) => emit(
+            state.copyWith(isLoading: false, errorMessage: failure.message),
           ),
-        ),
-      );
-    }, onError: (Object error) {
-      emit(
-        state.copyWith(
-          isLoading: false,
-          errorMessage: error.toString(),
-        ),
-      );
-    });
+          (threats) => emit(
+            state.copyWith(
+              isLoading: false,
+              threats: threats.isNotEmpty ? threats : _mockThreats,
+              errorMessage: null,
+            ),
+          ),
+        );
+      },
+      onError: (Object error) {
+        emit(state.copyWith(isLoading: false, errorMessage: error.toString()));
+      },
+    );
   }
+
+  static final List<Threat> _mockThreats = [
+    Threat(
+      threatId: 'T-1',
+      deviceId: 'SRV-AUTH-01',
+      type: 'Authentication',
+      riskLevel: 'high',
+      status: 'new',
+      description: 'Multiple failed SSH attempts detected from 192.168.1.105',
+      detectionMethod: 'Signature-based',
+      detectedAt: DateTime.now().subtract(const Duration(minutes: 5)),
+    ),
+    Threat(
+      threatId: 'T-2',
+      deviceId: 'WS-CORP-04',
+      type: 'Malware',
+      riskLevel: 'critical',
+      status: 'active',
+      description:
+          'Trojan.BitRAT signature detected in memory of Workstation-04',
+      detectionMethod: 'Heuristic',
+      detectedAt: DateTime.now().subtract(const Duration(minutes: 20)),
+    ),
+    Threat(
+      threatId: 'T-3',
+      deviceId: 'SRV-DATA-SEC',
+      type: 'Data',
+      riskLevel: 'high',
+      status: 'resolved',
+      description: 'Anomalous outbound traffic (4GB) to unknown external IP',
+      detectionMethod: 'Anomaly Detection',
+      detectedAt: DateTime.now().subtract(const Duration(hours: 1)),
+    ),
+    Threat(
+      threatId: 'T-4',
+      deviceId: 'GATEWAY-PUB',
+      type: 'Web',
+      riskLevel: 'medium',
+      status: 'new',
+      description: 'Web Application Firewall blocked SQL injection payload',
+      detectionMethod: 'Rule-based',
+      detectedAt: DateTime.now().subtract(const Duration(hours: 3)),
+    ),
+  ];
 
   void startRealtimeByStatus(String status) {
     emit(state.copyWith(isLoading: true, errorMessage: null));
     _threatsSubscription?.cancel();
-    _threatsSubscription = streamThreatsByStatusUseCase(
-      StreamThreatsByStatusParams(status: status),
-    ).listen((result) {
-      result.either(
-        (failure) => emit(
-          state.copyWith(isLoading: false, errorMessage: failure.message),
-        ),
-        (threats) => emit(
-          state.copyWith(
-            isLoading: false,
-            threats: threats,
-            errorMessage: null,
-          ),
-        ),
-      );
-    }, onError: (Object error) {
-      emit(
-        state.copyWith(
-          isLoading: false,
-          errorMessage: error.toString(),
-        ),
-      );
-    });
+    _threatsSubscription =
+        streamThreatsByStatusUseCase(
+          StreamThreatsByStatusParams(status: status),
+        ).listen(
+          (result) {
+            result.either(
+              (failure) => emit(
+                state.copyWith(isLoading: false, errorMessage: failure.message),
+              ),
+              (threats) => emit(
+                state.copyWith(
+                  isLoading: false,
+                  threats: threats,
+                  errorMessage: null,
+                ),
+              ),
+            );
+          },
+          onError: (Object error) {
+            emit(
+              state.copyWith(isLoading: false, errorMessage: error.toString()),
+            );
+          },
+        );
   }
 
   Future<void> fetchThreatById(String id) async {
     emit(state.copyWith(isLoading: true, errorMessage: null));
     final result = await getThreatByIdUseCase(GetThreatByIdParams(id: id));
     result.either(
-      (failure) => emit(
-        state.copyWith(isLoading: false, errorMessage: failure.message),
-      ),
+      (failure) =>
+          emit(state.copyWith(isLoading: false, errorMessage: failure.message)),
       (threat) => emit(
         state.copyWith(
           isLoading: false,

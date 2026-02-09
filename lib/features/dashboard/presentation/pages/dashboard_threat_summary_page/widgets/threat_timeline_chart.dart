@@ -1,8 +1,10 @@
 import 'package:corporate_threat_detection/core/themes/colors/app_colors.dart';
+import 'package:corporate_threat_detection/features/dashboard/data/models/threat_summary_model/threat_summary_model.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ThreatTimelineChart extends StatelessWidget {
-  final List<DayThreatData> data;
+  final List<ThreatTimelinePoint> data;
 
   const ThreatTimelineChart({super.key, required this.data});
 
@@ -48,14 +50,15 @@ class ThreatTimelineChart extends StatelessWidget {
     );
   }
 
-  Widget _buildBar(DayThreatData dayData) {
+  Widget _buildBar(ThreatTimelinePoint point) {
     final maxHeight = 140.0;
     final maxCount = data
-        .map((d) => d.totalCount)
+        .map((d) => d.count)
         .reduce((a, b) => a > b ? a : b);
     final height = maxCount > 0
-        ? (dayData.totalCount / maxCount) * maxHeight
+        ? (point.count / maxCount) * maxHeight
         : 0.0;
+    final label = DateFormat('E').format(point.date);
 
     return Expanded(
       child: Padding(
@@ -63,9 +66,9 @@ class ThreatTimelineChart extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            if (dayData.totalCount > 0)
+            if (point.count > 0)
               Text(
-                '${dayData.totalCount}',
+                '${point.count}',
                 style: const TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
@@ -80,8 +83,8 @@ class ThreatTimelineChart extends StatelessWidget {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    _getBarColor(dayData),
-                    _getBarColor(dayData).withOpacity(0.7),
+                    _getBarColor(point.count, maxCount),
+                    _getBarColor(point.count, maxCount).withOpacity(0.7),
                   ],
                 ),
                 borderRadius: BorderRadius.circular(4),
@@ -89,7 +92,7 @@ class ThreatTimelineChart extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              dayData.dayLabel,
+              label,
               style: TextStyle(fontSize: 10, color: Colors.grey.shade600),
             ),
           ],
@@ -98,14 +101,18 @@ class ThreatTimelineChart extends StatelessWidget {
     );
   }
 
-  Color _getBarColor(DayThreatData dayData) {
-    if (dayData.critical > 0 || dayData.high > dayData.totalCount * 0.5) {
-      return AppColors.c_F71E52;
-    } else if (dayData.medium > dayData.totalCount * 0.5) {
-      return AppColors.c_F7931E;
-    } else {
+  Color _getBarColor(int count, int maxCount) {
+    if (maxCount == 0) {
       return AppColors.buttonColor;
     }
+    final ratio = count / maxCount;
+    if (ratio >= 0.7) {
+      return AppColors.c_F71E52;
+    }
+    if (ratio >= 0.4) {
+      return AppColors.c_F7931E;
+    }
+    return AppColors.buttonColor;
   }
 
   Widget _buildLegend() {
@@ -141,22 +148,4 @@ class ThreatTimelineChart extends StatelessWidget {
       ],
     );
   }
-}
-
-class DayThreatData {
-  final String dayLabel;
-  final int critical;
-  final int high;
-  final int medium;
-  final int low;
-
-  DayThreatData({
-    required this.dayLabel,
-    required this.critical,
-    required this.high,
-    required this.medium,
-    required this.low,
-  });
-
-  int get totalCount => critical + high + medium + low;
 }

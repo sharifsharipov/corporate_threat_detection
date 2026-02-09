@@ -165,8 +165,17 @@ void _dataSources() {
     ..registerLazySingleton<SettingsDataSource>(
       () => SettingsDataSourceImpl(firestore: sl()),
     )
+    ..registerLazySingleton<SettingsRulesDataSource>(
+      () => SettingsRulesDataSourceImpl(firestore: sl()),
+    )
+    ..registerLazySingleton<AlertsDataSource>(
+      () => AlertsDataSourceImpl(firestore: sl()),
+    )
     ..registerLazySingleton<NetworkDataSource>(
       () => NetworkDataSourceImpl(firestore: sl()),
+    )
+    ..registerLazySingleton<MethodsDataSource>(
+      () => MethodsDataSourceImpl(firestore: sl()),
     );
 }
 
@@ -193,8 +202,17 @@ void _repositories() {
     ..registerLazySingleton<SettingsRepository>(
       () => SettingsRepositoryImpl(dataSource: sl()),
     )
+    ..registerLazySingleton<SettingsRulesRepository>(
+      () => SettingsRulesRepositoryImpl(dataSource: sl()),
+    )
+    ..registerLazySingleton<AlertsRepository>(
+      () => AlertsRepositoryImpl(dataSource: sl()),
+    )
     ..registerLazySingleton<NetworkRepository>(
       () => NetworkRepositoryImpl(dataSource: sl()),
+    )
+    ..registerLazySingleton<MethodsRepository>(
+      () => MethodsRepositoryImpl(dataSource: sl()),
     );
 }
 
@@ -248,11 +266,35 @@ void _useCase() {
     ..registerLazySingleton<StreamRecentReportsUseCase>(
       () => StreamRecentReportsUseCase(repository: sl()),
     )
+    ..registerLazySingleton<StreamDashboardStatsUseCase>(
+      () => StreamDashboardStatsUseCase(repository: sl()),
+    )
+    ..registerLazySingleton<StreamRecentAlertsUseCase>(
+      () => StreamRecentAlertsUseCase(repository: sl()),
+    )
+    ..registerLazySingleton<StreamRealtimeMetricsUseCase>(
+      () => StreamRealtimeMetricsUseCase(repository: sl()),
+    )
+    ..registerLazySingleton<StreamRealtimeActivityUseCase>(
+      () => StreamRealtimeActivityUseCase(repository: sl()),
+    )
+    ..registerLazySingleton<StreamThreatFeedUseCase>(
+      () => StreamThreatFeedUseCase(repository: sl()),
+    )
+    ..registerLazySingleton<StreamThreatMapLocationsUseCase>(
+      () => StreamThreatMapLocationsUseCase(repository: sl()),
+    )
+    ..registerLazySingleton<StreamThreatSummaryUseCase>(
+      () => StreamThreatSummaryUseCase(repository: sl()),
+    )
     ..registerLazySingleton<StreamAppSettingsUseCase>(
       () => StreamAppSettingsUseCase(repository: sl()),
     )
     ..registerLazySingleton<StreamUserProfileUseCase>(
       () => StreamUserProfileUseCase(repository: sl()),
+    )
+    ..registerLazySingleton<StreamUserProfilesUseCase>(
+      () => StreamUserProfilesUseCase(repository: sl()),
     )
     ..registerLazySingleton<UpdateSettingUseCase>(
       () => UpdateSettingUseCase(repository: sl()),
@@ -260,8 +302,41 @@ void _useCase() {
     ..registerLazySingleton<UpdateUserProfileUseCase>(
       () => UpdateUserProfileUseCase(repository: sl()),
     )
+    ..registerLazySingleton<StreamSettingsRulesUseCase>(
+      () => StreamSettingsRulesUseCase(repository: sl()),
+    )
+    ..registerLazySingleton<UpdateSettingsRuleUseCase>(
+      () => UpdateSettingsRuleUseCase(repository: sl()),
+    )
+    ..registerLazySingleton<StreamAlertsUseCase>(
+      () => StreamAlertsUseCase(repository: sl()),
+    )
+    ..registerLazySingleton<StreamAlertsBySeverityUseCase>(
+      () => StreamAlertsBySeverityUseCase(repository: sl()),
+    )
+    ..registerLazySingleton<UpdateAlertStatusUseCase>(
+      () => UpdateAlertStatusUseCase(repository: sl()),
+    )
     ..registerLazySingleton<StreamTrafficLogsUseCase>(
       () => StreamTrafficLogsUseCase(repository: sl()),
+    )
+    ..registerLazySingleton<StreamNetworkDevicesUseCase>(
+      () => StreamNetworkDevicesUseCase(repository: sl()),
+    )
+    ..registerLazySingleton<StreamNetworkDeviceUseCase>(
+      () => StreamNetworkDeviceUseCase(repository: sl()),
+    )
+    ..registerLazySingleton<StreamNetworkProtocolsUseCase>(
+      () => StreamNetworkProtocolsUseCase(repository: sl()),
+    )
+    ..registerLazySingleton<StreamDeviceApiUsageUseCase>(
+      () => StreamDeviceApiUsageUseCase(repository: sl()),
+    )
+    ..registerLazySingleton<StreamTrafficLogsByDeviceUseCase>(
+      () => StreamTrafficLogsByDeviceUseCase(repository: sl()),
+    )
+    ..registerLazySingleton<StreamDetectionMethodsUseCase>(
+      () => StreamDetectionMethodsUseCase(repository: sl()),
     );
 }
 
@@ -297,6 +372,23 @@ void _cubit() {
         streamResponseTimeUseCase: sl(),
       ),
     )
+    ..registerFactory<DashboardOverviewCubit>(
+      () => DashboardOverviewCubit(
+        streamDashboardStatsUseCase: sl(),
+        streamRecentAlertsUseCase: sl(),
+      ),
+    )
+    ..registerFactory<DashboardRealtimeCubit>(
+      () => DashboardRealtimeCubit(
+        streamRealtimeMetricsUseCase: sl(),
+        streamRealtimeActivityUseCase: sl(),
+        streamThreatFeedUseCase: sl(),
+        streamThreatMapLocationsUseCase: sl(),
+      ),
+    )
+    ..registerFactory<DashboardThreatSummaryCubit>(
+      () => DashboardThreatSummaryCubit(streamThreatSummaryUseCase: sl()),
+    )
     ..registerFactory<ReportsCubit>(
       () => ReportsCubit(
         streamReportTypesUseCase: sl(),
@@ -311,8 +403,48 @@ void _cubit() {
         updateUserProfileUseCase: sl(),
       ),
     )
+    ..registerFactory<SettingsRulesCubit>(
+      () => SettingsRulesCubit(
+        streamSettingsRulesUseCase: sl(),
+        updateSettingsRuleUseCase: sl(),
+      ),
+    )
+    ..registerFactory<UserManagementCubit>(
+      () => UserManagementCubit(
+        streamUserProfilesUseCase: sl(),
+        updateUserProfileUseCase: sl(),
+      ),
+    )
+    ..registerFactory<AlertsCubit>(
+      () => AlertsCubit(
+        streamAlertsUseCase: sl(),
+        streamAlertsBySeverityUseCase: sl(),
+        updateAlertStatusUseCase: sl(),
+      ),
+    )
     ..registerFactory<NetworkTrafficLogsCubit>(
       () => NetworkTrafficLogsCubit(streamTrafficLogsUseCase: sl()),
+    )
+    ..registerFactory<NetworkDevicesCubit>(
+      () => NetworkDevicesCubit(streamNetworkDevicesUseCase: sl()),
+    )
+    ..registerFactory<NetworkProtocolsCubit>(
+      () => NetworkProtocolsCubit(streamNetworkProtocolsUseCase: sl()),
+    )
+    ..registerFactory<DeviceApiUsageCubit>(
+      () => DeviceApiUsageCubit(streamDeviceApiUsageUseCase: sl()),
+    )
+    ..registerFactory<DeviceDetailCubit>(
+      () => DeviceDetailCubit(
+        streamNetworkDeviceUseCase: sl(),
+        streamTrafficLogsByDeviceUseCase: sl(),
+      ),
+    )
+    ..registerFactory<MethodsCubit>(
+      () => MethodsCubit(streamDetectionMethodsUseCase: sl()),
+    )
+    ..registerFactory<ThreatTypesCubit>(
+      () => ThreatTypesCubit(streamThreatsUseCase: sl()),
     );
 }
 

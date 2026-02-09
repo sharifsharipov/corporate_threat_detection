@@ -91,12 +91,18 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: Routes.deviceDetail,
       name: Routes.deviceDetail,
-      builder: (context, state) => const DeviceDetailPage(),
+      builder: (context, state) => DeviceDetailPage(
+        device: state.extra is NetworkDeviceModel
+            ? state.extra as NetworkDeviceModel
+            : null,
+      ),
     ),
     GoRoute(
       path: Routes.deviceApiUsage,
       name: Routes.deviceApiUsage,
-      builder: (context, state) => const DeviceApiUsagePage(),
+      builder: (context, state) => DeviceApiUsagePage(
+        deviceId: state.extra is String ? state.extra as String : null,
+      ),
     ),
     GoRoute(
       path: Routes.networkProtocols,
