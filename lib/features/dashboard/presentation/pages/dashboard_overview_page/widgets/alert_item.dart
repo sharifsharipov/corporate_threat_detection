@@ -31,13 +31,13 @@ class AlertItem extends StatelessWidget {
   IconData get _getSeverityIcon {
     switch (severity) {
       case AlertSeverity.low:
-        return Icons.info_outline;
+        return Icons.info_rounded;
       case AlertSeverity.medium:
         return Icons.warning_amber_rounded;
       case AlertSeverity.high:
-        return Icons.error_outline;
+        return Icons.error_rounded;
       case AlertSeverity.critical:
-        return Icons.dangerous_outlined;
+        return Icons.dangerous_rounded;
     }
   }
 
@@ -62,7 +62,10 @@ class AlertItem extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: _getSeverityColor.withValues(alpha: 0.2), width: 1),
+        border: Border.all(
+          color: _getSeverityColor.withValues(alpha: 0.2),
+          width: 1,
+        ),
       ),
       child: Row(
         children: [

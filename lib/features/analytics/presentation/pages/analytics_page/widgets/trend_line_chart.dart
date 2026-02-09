@@ -1,4 +1,5 @@
 import 'package:corporate_threat_detection/core/themes/colors/app_colors.dart';
+import 'package:corporate_threat_detection/features/analytics/presentation/models/analytics_view_models.dart';
 import 'package:flutter/material.dart';
 
 class TrendLineChart extends StatelessWidget {
@@ -194,18 +195,4 @@ class _TrendLinePainter extends CustomPainter {
   bool shouldRepaint(_TrendLinePainter oldDelegate) {
     return oldDelegate.data != data;
   }
-}
-
-class MonthlyTrendData {
-  final String month;
-  final int detected;
-  final int blocked;
-  final int falsePositives;
-
-  MonthlyTrendData({
-    required this.month,
-    required this.detected,
-    required this.blocked,
-    required this.falsePositives,
-  });
 }

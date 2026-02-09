@@ -1,5 +1,5 @@
 import 'package:corporate_threat_detection/features/logs/presentation/pages/history_page/history_page.dart';
-import 'package:corporate_threat_detection/features/logs/presentation/pages/history_page/widgets/history_event_item.dart';
+import 'package:corporate_threat_detection/features/logs/data/models/history_event_model/history_event_model.dart';
 import 'package:flutter/material.dart';
 
 mixin HistoryMixin on State<HistoryPage> {

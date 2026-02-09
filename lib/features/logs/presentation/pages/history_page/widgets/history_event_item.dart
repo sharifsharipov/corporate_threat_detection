@@ -1,7 +1,6 @@
 import 'package:corporate_threat_detection/core/themes/colors/app_colors.dart';
+import 'package:corporate_threat_detection/features/logs/data/models/history_event_model/history_event_model.dart';
 import 'package:flutter/material.dart';
-
-enum EventSeverity { critical, high, medium, low }
 
 class HistoryEventItem extends StatefulWidget {
   final String title;

@@ -142,28 +142,178 @@ Future<void> init() async {
 }
 
 void _dataSources() {
-  /// Auth
-  /* sl.registerLazySingleton<AuthDataSource>(
-    () => AuthDataSourceImpl(dio: sl(), localSource: sl()),
-  );*/
+  sl
+    ..registerLazySingleton<FirebaseFirestore>(() => FirebaseFirestore.instance)
+    ..registerLazySingleton<DashboardRemoteDataSource>(
+      () => DashboardRemoteDataSourceImpl(firestore: sl()),
+    )
+    ..registerLazySingleton<ThreatsDataSource>(
+      () => ThreatsDataSourceImpl(firestore: sl()),
+    )
+    ..registerLazySingleton<LogsDataSource>(
+      () => LogsDataSourceImpl(firestore: sl()),
+    )
+    ..registerLazySingleton<HistoryDataSource>(
+      () => HistoryDataSourceImpl(firestore: sl()),
+    )
+    ..registerLazySingleton<AnalyticsDataSource>(
+      () => AnalyticsDataSourceImpl(firestore: sl()),
+    )
+    ..registerLazySingleton<ReportsDataSource>(
+      () => ReportsDataSourceImpl(firestore: sl()),
+    )
+    ..registerLazySingleton<SettingsDataSource>(
+      () => SettingsDataSourceImpl(firestore: sl()),
+    )
+    ..registerLazySingleton<NetworkDataSource>(
+      () => NetworkDataSourceImpl(firestore: sl()),
+    );
 }
 
 void _repositories() {
-  /// Auth
-  /*sl.registerLazySingleton<AuthRepository>(
-    () => AuthRepositoryImpl(authDataSource: sl()),
-  );*/
+  sl
+    ..registerLazySingleton<DashboardRepository>(
+      () => DashboardRepositoryImpl(remoteDataSource: sl()),
+    )
+    ..registerLazySingleton<ThreatsRepository>(
+      () => ThreatsRepositoryImpl(dataSource: sl()),
+    )
+    ..registerLazySingleton<LogsRepository>(
+      () => LogsRepositoryImpl(dataSource: sl()),
+    )
+    ..registerLazySingleton<HistoryRepository>(
+      () => HistoryRepositoryImpl(dataSource: sl()),
+    )
+    ..registerLazySingleton<AnalyticsRepository>(
+      () => AnalyticsRepositoryImpl(dataSource: sl()),
+    )
+    ..registerLazySingleton<ReportsRepository>(
+      () => ReportsRepositoryImpl(dataSource: sl()),
+    )
+    ..registerLazySingleton<SettingsRepository>(
+      () => SettingsRepositoryImpl(dataSource: sl()),
+    )
+    ..registerLazySingleton<NetworkRepository>(
+      () => NetworkRepositoryImpl(dataSource: sl()),
+    );
 }
 
 void _useCase() {
-  /// Auth
-  /*  sl.registerLazySingleton<SendSmsUseCase>(
-    () => SendSmsUseCase(authRepository: sl()),
-  );*/
+  sl
+    ..registerLazySingleton<GetThreatsUseCase>(
+      () => GetThreatsUseCase(repository: sl()),
+    )
+    ..registerLazySingleton<GetThreatByIdUseCase>(
+      () => GetThreatByIdUseCase(repository: sl()),
+    )
+    ..registerLazySingleton<StreamThreatsUseCase>(
+      () => StreamThreatsUseCase(repository: sl()),
+    )
+    ..registerLazySingleton<StreamThreatsByStatusUseCase>(
+      () => StreamThreatsByStatusUseCase(repository: sl()),
+    )
+    ..registerLazySingleton<UpdateThreatStatusUseCase>(
+      () => UpdateThreatStatusUseCase(repository: sl()),
+    )
+    ..registerLazySingleton<GetSystemLogsUseCase>(
+      () => GetSystemLogsUseCase(repository: sl()),
+    )
+    ..registerLazySingleton<StreamSystemLogsUseCase>(
+      () => StreamSystemLogsUseCase(repository: sl()),
+    )
+    ..registerLazySingleton<StreamSystemLogsByLevelUseCase>(
+      () => StreamSystemLogsByLevelUseCase(repository: sl()),
+    )
+    ..registerLazySingleton<StreamHistoryEventsUseCase>(
+      () => StreamHistoryEventsUseCase(repository: sl()),
+    )
+    ..registerLazySingleton<StreamHistoryEventsBySeverityUseCase>(
+      () => StreamHistoryEventsBySeverityUseCase(repository: sl()),
+    )
+    ..registerLazySingleton<StreamPerformanceMetricsUseCase>(
+      () => StreamPerformanceMetricsUseCase(repository: sl()),
+    )
+    ..registerLazySingleton<StreamMonthlyTrendsUseCase>(
+      () => StreamMonthlyTrendsUseCase(repository: sl()),
+    )
+    ..registerLazySingleton<StreamAttackVectorsUseCase>(
+      () => StreamAttackVectorsUseCase(repository: sl()),
+    )
+    ..registerLazySingleton<StreamResponseTimeUseCase>(
+      () => StreamResponseTimeUseCase(repository: sl()),
+    )
+    ..registerLazySingleton<StreamReportTypesUseCase>(
+      () => StreamReportTypesUseCase(repository: sl()),
+    )
+    ..registerLazySingleton<StreamRecentReportsUseCase>(
+      () => StreamRecentReportsUseCase(repository: sl()),
+    )
+    ..registerLazySingleton<StreamAppSettingsUseCase>(
+      () => StreamAppSettingsUseCase(repository: sl()),
+    )
+    ..registerLazySingleton<StreamUserProfileUseCase>(
+      () => StreamUserProfileUseCase(repository: sl()),
+    )
+    ..registerLazySingleton<UpdateSettingUseCase>(
+      () => UpdateSettingUseCase(repository: sl()),
+    )
+    ..registerLazySingleton<UpdateUserProfileUseCase>(
+      () => UpdateUserProfileUseCase(repository: sl()),
+    )
+    ..registerLazySingleton<StreamTrafficLogsUseCase>(
+      () => StreamTrafficLogsUseCase(repository: sl()),
+    );
 }
 
 void _cubit() {
-  /*sl.registerFactory<AboutAppCubit>(() => AboutAppCubit());*/
+  sl
+    ..registerFactory<ThreatsCubit>(
+      () => ThreatsCubit(
+        getThreatsUseCase: sl(),
+        getThreatByIdUseCase: sl(),
+        streamThreatsUseCase: sl(),
+        streamThreatsByStatusUseCase: sl(),
+        updateThreatStatusUseCase: sl(),
+      ),
+    )
+    ..registerFactory<LogsCubit>(
+      () => LogsCubit(
+        getSystemLogsUseCase: sl(),
+        streamSystemLogsUseCase: sl(),
+        streamSystemLogsByLevelUseCase: sl(),
+      ),
+    )
+    ..registerFactory<HistoryCubit>(
+      () => HistoryCubit(
+        streamHistoryEventsUseCase: sl(),
+        streamHistoryEventsBySeverityUseCase: sl(),
+      ),
+    )
+    ..registerFactory<AnalyticsCubit>(
+      () => AnalyticsCubit(
+        streamPerformanceMetricsUseCase: sl(),
+        streamMonthlyTrendsUseCase: sl(),
+        streamAttackVectorsUseCase: sl(),
+        streamResponseTimeUseCase: sl(),
+      ),
+    )
+    ..registerFactory<ReportsCubit>(
+      () => ReportsCubit(
+        streamReportTypesUseCase: sl(),
+        streamRecentReportsUseCase: sl(),
+      ),
+    )
+    ..registerFactory<SettingsCubit>(
+      () => SettingsCubit(
+        streamAppSettingsUseCase: sl(),
+        streamUserProfileUseCase: sl(),
+        updateSettingUseCase: sl(),
+        updateUserProfileUseCase: sl(),
+      ),
+    )
+    ..registerFactory<NetworkTrafficLogsCubit>(
+      () => NetworkTrafficLogsCubit(streamTrafficLogsUseCase: sl()),
+    );
 }
 
 void _bloc() {

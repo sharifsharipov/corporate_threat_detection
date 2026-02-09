@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:corporate_threat_detection/features/logs/presentation/pages/logs_page/logs_page.dart';
-import 'package:corporate_threat_detection/features/logs/presentation/pages/logs_page/widgets/log_entry_item.dart';
+import 'package:corporate_threat_detection/features/logs/data/models/system_log_model/system_log_model.dart';
 import 'package:flutter/material.dart';
 
 mixin LogsMixin on State<LogsPage> {

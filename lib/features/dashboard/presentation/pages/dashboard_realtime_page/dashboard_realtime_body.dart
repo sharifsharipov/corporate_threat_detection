@@ -38,7 +38,7 @@ class DashboardRealtimeBody extends StatelessWidget {
                   changeAmount: mixin.activeThreatsChange,
                 ),
                 LiveMetricCard(
-                  icon: Icons.shield_outlined,
+                  icon: Icons.shield_rounded,
                   value: mixin.blockedAttacks,
                   label: 'Blocked Today',
                   color: AppColors.c_03A64B,
@@ -46,7 +46,7 @@ class DashboardRealtimeBody extends StatelessWidget {
                   changeAmount: mixin.blockedAttacksChange,
                 ),
                 LiveMetricCard(
-                  icon: Icons.people_outline,
+                  icon: Icons.people_alt_rounded,
                   value: mixin.activeConnections,
                   label: 'Active Connections',
                   color: AppColors.buttonColor,
@@ -54,7 +54,7 @@ class DashboardRealtimeBody extends StatelessWidget {
                   changeAmount: mixin.activeConnectionsChange,
                 ),
                 LiveMetricCard(
-                  icon: Icons.speed,
+                  icon: Icons.speed_rounded,
                   value: mixin.systemLoad,
                   label: 'System Load %',
                   color: AppColors.c_F7931E,

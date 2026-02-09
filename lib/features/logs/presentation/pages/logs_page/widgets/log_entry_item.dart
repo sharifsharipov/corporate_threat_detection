@@ -1,7 +1,6 @@
 import 'package:corporate_threat_detection/core/themes/colors/app_colors.dart';
+import 'package:corporate_threat_detection/features/logs/data/models/system_log_model/system_log_model.dart';
 import 'package:flutter/material.dart';
-
-enum LogLevel { error, warning, info, debug }
 
 class LogEntryItem extends StatefulWidget {
   final DateTime timestamp;

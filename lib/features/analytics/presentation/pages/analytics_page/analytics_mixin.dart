@@ -1,7 +1,6 @@
 import 'package:corporate_threat_detection/core/themes/colors/app_colors.dart';
 import 'package:corporate_threat_detection/features/analytics/presentation/pages/analytics_page/analytics_page.dart';
-import 'package:corporate_threat_detection/features/analytics/presentation/pages/analytics_page/widgets/attack_vector_chart.dart';
-import 'package:corporate_threat_detection/features/analytics/presentation/pages/analytics_page/widgets/trend_line_chart.dart';
+import 'package:corporate_threat_detection/features/analytics/presentation/models/analytics_view_models.dart';
 import 'package:flutter/material.dart';
 
 mixin AnalyticsMixin on State<AnalyticsPage> {
@@ -98,32 +97,4 @@ mixin AnalyticsMixin on State<AnalyticsPage> {
   List<MonthlyTrendData> get trendData => _trendData;
   Map<String, AttackVectorData> get attackVectors => _attackVectors;
   ResponseTimeData get responseTime => _responseTime;
-}
-
-class MetricData {
-  final String value;
-  final IconData icon;
-  final Color color;
-  final double changePercentage;
-  final bool isIncrease;
-
-  MetricData({
-    required this.value,
-    required this.icon,
-    required this.color,
-    required this.changePercentage,
-    required this.isIncrease,
-  });
-}
-
-class ResponseTimeData {
-  final double averageMs;
-  final double minMs;
-  final double maxMs;
-
-  ResponseTimeData({
-    required this.averageMs,
-    required this.minMs,
-    required this.maxMs,
-  });
 }

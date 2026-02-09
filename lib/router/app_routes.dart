@@ -75,7 +75,8 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: Routes.threatDetail,
       name: Routes.threatDetail,
-      builder: (context, state) => const ThreatDetailPage(),
+      builder: (context, state) =>
+          ThreatDetailPage(threat: state.extra as Threat?),
     ),
     GoRoute(
       path: Routes.threatTypes,

@@ -25,6 +25,7 @@ import 'package:corporate_threat_detection/features/threats/presentation/pages/t
 import 'package:corporate_threat_detection/features/threats/presentation/pages/threats_resolved_page/threats_resolved_page.dart';
 import 'package:corporate_threat_detection/features/threats/presentation/pages/threat_detail_page/threat_detail_page.dart';
 import 'package:corporate_threat_detection/features/threats/presentation/pages/threat_types_page/threat_types_page.dart';
+import 'package:corporate_threat_detection/features/threats/data/models/threat/threat.dart';
 
 // Network
 import 'package:corporate_threat_detection/features/network/presentation/pages/network_devices_page/network_devices_page.dart';

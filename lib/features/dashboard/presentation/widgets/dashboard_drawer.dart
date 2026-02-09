@@ -37,7 +37,7 @@ class DashboardDrawer extends StatelessWidget {
                     ],
                   ),
                   child: Icon(
-                    Icons.shield_outlined,
+                    Icons.shield_rounded,
                     size: 32,
                     color: AppColors.buttonColor,
                   ),
@@ -66,7 +66,7 @@ class DashboardDrawer extends StatelessWidget {
               children: [
                 _buildNavItem(
                   context,
-                  icon: Icons.dashboard_outlined,
+                  icon: Icons.dashboard_rounded,
                   label: 'Overview',
                   route: Routes.dashboardOverview,
                 ),
@@ -78,13 +78,13 @@ class DashboardDrawer extends StatelessWidget {
                 ),
                 _buildNavItem(
                   context,
-                  icon: Icons.analytics_outlined,
+                  icon: Icons.analytics_rounded,
                   label: 'Analytics',
                   route: Routes.analytics,
                 ),
                 _buildNavItem(
                   context,
-                  icon: Icons.description_outlined,
+                  icon: Icons.description_rounded,
                   label: 'Reports',
                   route: Routes.reports,
                 ),
@@ -97,13 +97,13 @@ class DashboardDrawer extends StatelessWidget {
                 const Divider(height: 32),
                 _buildNavItem(
                   context,
-                  icon: Icons.notifications_none_rounded,
+                  icon: Icons.notifications_rounded,
                   label: 'Alerts',
                   route: Routes.alerts,
                 ),
                 _buildNavItem(
                   context,
-                  icon: Icons.settings_outlined,
+                  icon: Icons.settings_rounded,
                   label: 'Settings',
                   route:
                       Routes.settingsRules, // Changed to a valid settings route
@@ -128,7 +128,11 @@ class DashboardDrawer extends StatelessWidget {
                 padding: const EdgeInsets.all(12),
                 child: Row(
                   children: [
-                    Icon(Icons.logout, size: 20, color: AppColors.c_F71E52),
+                    Icon(
+                      Icons.logout_rounded,
+                      size: 20,
+                      color: AppColors.c_F71E52,
+                    ),
                     const SizedBox(width: 12),
                     Text(
                       'Logout',

@@ -1,3 +1,4 @@
+import 'package:corporate_threat_detection/features/analytics/presentation/models/analytics_view_models.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
@@ -132,11 +133,4 @@ class _PieChartPainter extends CustomPainter {
   bool shouldRepaint(_PieChartPainter oldDelegate) {
     return oldDelegate.attackVectors != attackVectors;
   }
-}
-
-class AttackVectorData {
-  final int count;
-  final Color color;
-
-  AttackVectorData({required this.count, required this.color});
 }

@@ -18,33 +18,33 @@ class DashboardOverviewBody extends StatelessWidget {
           children: [
             // Statistics Cards Grid
             GridView.count(
-              crossAxisCount: 2,
+              crossAxisCount: 4,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               crossAxisSpacing: 12,
               mainAxisSpacing: 12,
-              childAspectRatio: 1.3,
+              childAspectRatio: 2.4,
               children: const [
                 StatCard(
-                  icon: Icons.shield_outlined,
+                  icon: Icons.shield_rounded,
                   value: '1,247',
                   label: 'Total Threats',
                   color: AppColors.c_F71E52,
                 ),
                 StatCard(
-                  icon: Icons.notifications_active_outlined,
+                  icon: Icons.notifications_active_rounded,
                   value: '23',
                   label: 'Active Alerts',
                   color: AppColors.c_F7931E,
                 ),
                 StatCard(
-                  icon: Icons.check_circle_outline,
+                  icon: Icons.check_circle_rounded,
                   value: '1,189',
                   label: 'Resolved',
                   color: AppColors.c_03A64B,
                 ),
                 StatCard(
-                  icon: Icons.monitor_heart_outlined,
+                  icon: Icons.monitor_heart_rounded,
                   value: 'Online',
                   label: 'System Status',
                   color: AppColors.buttonColor,

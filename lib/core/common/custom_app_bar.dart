@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:corporate_threat_detection/core/extension/extension.dart';
 import 'package:corporate_threat_detection/core/utils/utils.dart';
+import 'package:corporate_threat_detection/router/routes.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({
@@ -26,6 +27,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      iconTheme: const IconThemeData(color: Colors.black),
       leading: leadingVisible
           ? (customLeading
                 ? IconButton(
@@ -33,12 +35,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       onTap?.call();
                       if (context.canPop()) {
                         context.pop();
+                      } else {
+                        context.go(Routes.dashboardOverview);
                       }
                     },
-                    icon: Icon(
-                      Icons.arrow_back,
-                      color: context.isDarkMode ? Colors.white : Colors.black,
-                    ),
+                    icon: Icon(Icons.arrow_back, color: Colors.black),
                   )
                 : null)
           : const SizedBox.shrink(),
