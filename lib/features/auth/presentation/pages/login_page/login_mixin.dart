@@ -1,3 +1,6 @@
+import 'package:corporate_threat_detection/features/auth/data/models/auth_model.dart';
+import 'package:corporate_threat_detection/features/auth/domain/repository/auth_repository.dart';
+import 'package:corporate_threat_detection/injector_container_path.dart';
 import 'package:corporate_threat_detection/router/routes.dart';
 import 'package:corporate_threat_detection/features/auth/presentation/pages/login_page/login_page.dart';
 import 'package:flutter/material.dart';
@@ -28,13 +31,33 @@ mixin LoginMixin on State<LoginPage> {
     if (formKey.currentState!.validate()) {
       setState(() => isLoading = true);
 
-      // Simulate API call
-      await Future.delayed(const Duration(seconds: 2));
+      try {
+        final request = LoginRequest(
+          email: emailController.text.trim(),
+          password: passwordController.text.trim(),
+        );
 
-      if (mounted) {
-        setState(() => isLoading = false);
-        // Navigate to dashboard
-        context.go(Routes.dashboardOverview);
+        // Access the repository from the service locator
+        final authRepository = sl<AuthRepository>();
+
+        // Login and register FCM token (handled in repo)
+        await authRepository.login(request);
+
+        if (mounted) {
+          setState(() => isLoading = false);
+          // Navigate to dashboard
+          context.go(Routes.dashboardOverview);
+        }
+      } catch (e) {
+        if (mounted) {
+          setState(() => isLoading = false);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Login failed: ${e.toString()}'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
       }
     }
   }

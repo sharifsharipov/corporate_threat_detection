@@ -1,13 +1,12 @@
-import 'package:chuck_interceptor/chuck_interceptor.dart';
-import 'package:corporate_threat_detection/core/connectivity/network_info.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:go_router/go_router.dart';
 import 'package:corporate_threat_detection/core/database/local_data_source.dart';
 import 'package:corporate_threat_detection/injector_container_path.dart';
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 
 // Auth
 import 'package:corporate_threat_detection/features/auth/presentation/pages/login_page/login_page.dart';
+import 'package:corporate_threat_detection/features/splash/presentation/pages/splash_page.dart';
 import 'package:corporate_threat_detection/features/auth/presentation/pages/register_page/register_page.dart';
 import 'package:corporate_threat_detection/features/auth/presentation/pages/forgot_password_page/forgot_password_page.dart';
 

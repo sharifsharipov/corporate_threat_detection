@@ -29,7 +29,9 @@ Future<void> main() async {
   }
 
   /// global CERTIFICATE_VERIFY_FAILEd_KEY
-  HttpOverrides.global = _HttpOverrides();
+  if (!kIsWeb) {
+    HttpOverrides.global = _HttpOverrides();
+  }
   runApp(App());
 }
 

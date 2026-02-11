@@ -3,6 +3,10 @@ import 'dart:io';
 
 import 'package:chuck_interceptor/chuck_interceptor.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:corporate_threat_detection/features/auth/data/data_source/auth_data_source.dart';
+import 'package:corporate_threat_detection/features/auth/data/data_source/auth_data_source_impl.dart';
+import 'package:corporate_threat_detection/features/auth/data/repository/auth_repository_impl.dart';
+import 'package:corporate_threat_detection/features/auth/domain/repository/auth_repository.dart';
 import 'package:corporate_threat_detection/constants/constants.dart';
 import 'package:corporate_threat_detection/core/connectivity/network_info.dart';
 import 'package:corporate_threat_detection/core/database/local_data_source.dart';
@@ -113,6 +117,7 @@ import 'package:corporate_threat_detection/features/threats/presentation/bloc/th
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:dio_retry_plus/dio_retry_plus.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';

@@ -11,24 +11,25 @@ Future<void> init() async {
   await _initHive();
 
   /// Dio
-  sl.registerLazySingleton(
-    () => Dio()
-      ..options = BaseOptions(
+  sl.registerLazySingleton(() {
+    final dio = Dio(
+      BaseOptions(
         baseUrl: Constants.baseUrl,
         contentType: "application/json",
         sendTimeout: const Duration(seconds: 30),
         connectTimeout: const Duration(seconds: 30),
         receiveTimeout: const Duration(seconds: 30),
-
         headers: <String, String>{},
-      )
-      ..httpClientAdapter = IOHttpClientAdapter(
+      ),
+    );
+
+    if (!kIsWeb) {
+      dio.httpClientAdapter = IOHttpClientAdapter(
         createHttpClient: () {
           final HttpClient client = HttpClient()
             ..badCertificateCallback = (X509Certificate cert, String host, __) {
               log("cert: ${cert.pem}");
               log("host: $host");
-              // return cert.pem == certificate;
               return true;
             };
           return client;
@@ -36,30 +37,30 @@ Future<void> init() async {
         validateCertificate: (X509Certificate? cert, String host, __) {
           log("cert: ${cert?.pem}");
           log("host: $host");
-          if (cert == null) {
-            return true;
-          }
-          // Clipboard.setData(ClipboardData(text: cert.pem));
+          if (cert == null) return true;
           return true;
-          // return cert.pem == certificate;
         },
-      )
-      ..interceptors.add(
-        LogInterceptor(
-          error: kDebugMode,
-          request: kDebugMode,
-          requestBody: kDebugMode,
-          responseBody: kDebugMode,
-          requestHeader: kDebugMode,
-          responseHeader: kDebugMode,
-          logPrint: (Object object) {
-            if (kDebugMode) {
-              log("dio: $object");
-            }
-          },
-        ),
+      );
+    }
+
+    dio.interceptors.add(
+      LogInterceptor(
+        error: kDebugMode,
+        request: kDebugMode,
+        requestBody: kDebugMode,
+        responseBody: kDebugMode,
+        requestHeader: kDebugMode,
+        responseHeader: kDebugMode,
+        logPrint: (Object object) {
+          if (kDebugMode) {
+            log("dio: $object");
+          }
+        },
       ),
-  );
+    );
+
+    return dio;
+  });
 
   sl<Dio>().interceptors.addAll(<Interceptor>[
     chuck.dioInterceptor,
@@ -127,6 +128,7 @@ Future<void> init() async {
   /// Core
   sl
     ..registerSingleton<LocalSource>(LocalSource(_box))
+    ..registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance)
     ..registerLazySingleton(
       () => InternetConnectionChecker.createInstance(
         checkInterval: const Duration(seconds: 3),
@@ -143,6 +145,9 @@ Future<void> init() async {
 
 void _dataSources() {
   sl
+    ..registerLazySingleton<AuthDataSource>(
+      () => AuthDataSourceImpl(sl(), sl()),
+    )
     ..registerLazySingleton<FirebaseFirestore>(() => FirebaseFirestore.instance)
     ..registerLazySingleton<DashboardRemoteDataSource>(
       () => DashboardRemoteDataSourceImpl(firestore: sl()),
@@ -181,6 +186,9 @@ void _dataSources() {
 
 void _repositories() {
   sl
+    ..registerLazySingleton<AuthRepository>(
+      () => AuthRepositoryImpl(sl(), sl()),
+    )
     ..registerLazySingleton<DashboardRepository>(
       () => DashboardRepositoryImpl(remoteDataSource: sl()),
     )

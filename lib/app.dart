@@ -7,25 +7,24 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
+  static final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey =
+      GlobalKey<ScaffoldMessengerState>();
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    GlobalKey<ScaffoldMessengerState>? scaffoldMessengerKey;
     return MaterialApp.router(
       /// title
       debugShowCheckedModeBanner: false,
-      scaffoldMessengerKey: scaffoldMessengerKey,
+      scaffoldMessengerKey: _scaffoldMessengerKey,
       showPerformanceOverlay: false,
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: ThemeMode.light,
+
       /// lang. state.selectedLanguage,
-      locale: Locale('uz'),
-      supportedLocales: const [
-        Locale('en'),
-        Locale('ru'),
-        Locale('uz'),
-      ],
+      locale: const Locale('uz'),
+      supportedLocales: const [Locale('en'), Locale('ru'), Locale('uz')],
       localizationsDelegates: const [
         S.delegate,
         GlobalMaterialLocalizations.delegate,

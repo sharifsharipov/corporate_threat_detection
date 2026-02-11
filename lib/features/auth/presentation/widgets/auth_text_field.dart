@@ -50,7 +50,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
           obscureText: widget.isPassword && _obscureText,
           keyboardType: widget.keyboardType,
           textInputAction: widget.textInputAction,
-          style: const TextStyle(fontSize: 15),
+          style: const TextStyle(fontSize: 15, color: Colors.black),
           decoration: InputDecoration(
             hintText: widget.hint,
             hintStyle: TextStyle(color: Colors.grey.shade400),

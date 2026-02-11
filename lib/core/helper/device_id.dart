@@ -12,7 +12,10 @@ Future<String> getDeviceId() async {
   String deviceId;
 
   try {
-    if (Platform.isIOS) {
+    if (kIsWeb) {
+      deviceId = 'web-browser';
+      if (kDebugMode) debugPrint('Web Device ID: $deviceId');
+    } else if (Platform.isIOS) {
       final iosInfo = await deviceInfo.iosInfo;
       deviceId = iosInfo.identifierForVendor?.isNotEmpty ?? false
           ? iosInfo.identifierForVendor!

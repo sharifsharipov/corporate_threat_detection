@@ -1,5 +1,6 @@
 import "dart:io";
 
+import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 import "package:hive/hive.dart";
 import "package:corporate_threat_detection/constants/app_keys.dart";
@@ -54,6 +55,7 @@ final class LocalSource {
 
     /// if language not selected, use device language as app language
     if (languageCode == null) {
+      if (kIsWeb) return const Locale('uz');
       final deviceLang = Platform.localeName.split('_').first;
       switch (deviceLang) {
         case 'uz':

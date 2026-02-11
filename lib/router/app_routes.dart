@@ -1,24 +1,17 @@
 part of 'routes.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
-
-final PackageInfo packageInfo = sl<PackageInfo>();
-final NetworkInfo networkInfo = sl<NetworkInfo>();
 final LocalSource localSource = sl<LocalSource>();
 
-final Chuck chuck = Chuck(
-  navigatorKey: rootNavigatorKey,
-  showNotification: true,
-);
 final GoRouter router = GoRouter(
   navigatorKey: rootNavigatorKey,
   initialLocation: Routes.initial,
-  debugLogDiagnostics: true,
+  debugLogDiagnostics: kDebugMode,
   routes: [
     GoRoute(
       path: Routes.initial,
       name: Routes.initial,
-      builder: (context, state) => const DashboardOverviewPage(),
+      builder: (context, state) => const SplashPage(),
     ),
     GoRoute(
       path: Routes.login,
@@ -37,11 +30,6 @@ final GoRouter router = GoRouter(
     ),
 
     GoRoute(
-      path: Routes.dashboardOverview,
-      name: Routes.dashboardOverview,
-      builder: (context, state) => const DashboardOverviewPage(),
-    ),
-    GoRoute(
       path: Routes.dashboardRealtime,
       name: Routes.dashboardRealtime,
       builder: (context, state) => const DashboardRealtimePage(),
@@ -50,6 +38,11 @@ final GoRouter router = GoRouter(
       path: Routes.dashboardThreatSummary,
       name: Routes.dashboardThreatSummary,
       builder: (context, state) => const DashboardThreatSummaryPage(),
+    ),
+    GoRoute(
+      path: Routes.dashboardOverview,
+      name: Routes.dashboardOverview,
+      builder: (context, state) => const DashboardOverviewPage(),
     ),
 
     GoRoute(
